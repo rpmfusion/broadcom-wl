@@ -1,6 +1,6 @@
 Name:		broadcom-wl
 Version:	5.10.27.6
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Common files for Broadcom 802.11 STA driver
 Group:		System Environment/Kernel
 License:	Redistributable, no modification permitted
@@ -13,6 +13,8 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
 Provides:	wl-kmod-common = %{version}
 Requires:	wl-kmod >= %{version}
+
+ExcludeArch:    ppc ppc64
 
 %description
 This package contains the license, readme and configuration files
@@ -44,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/modprobe.d/broadcom-wl-blacklist
 
 %changelog
+* Sat Dec 20 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 5.10.27.6-4
+- ExcludeArch ppc, ppc64
+
 * Fri Nov 07 2008 Chris Nolan <chris@cenolan.com> 5.10.27.6-3
 - Updated README.txt file
 - Cleaned up spec file
