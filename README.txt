@@ -37,9 +37,21 @@ If you require to use any of these modules for other installed hardware then
 you will need to comment out the corresponding entry for that module. Note 
 that doing so may prevent this driver from functioning.
 
-By default the wireless card used by this driver will usually be identified as
-wlan0. If you wish to change the assigned device identifier then you should 
-create a new file in /etc/modprobe.d/ and add an alias for the wl module. For
-example:
+----------------------------
+ISSUES FIXED IN THIS RELEASE
+----------------------------
 
-echo "alias eth0 wl" > /etc/modprobe.d/broadcom-wl-alias
+#72138 - SLED11 / Ubuntu 8.04: 43224 fails to associate after 6 hours
+
+----------------------------
+KNOWN ISSUES AND LIMITATIONS
+----------------------------
+
+#72238 - 20% lower throughput on channels 149, 153, 157, and 161
+#72324 - Ubuntu 8.04: cannot ping when Linux STA is IBSS creator with WEP
+enabled
+#72216 - Ubuntu 8.04: standby/resume with WPA2 and wpa_supplicant causes a
+continuous assoc/disassoc loop
+         (issue with wpa_supplicant, restarting wpa_supplicant fixes the
+issue)
+
