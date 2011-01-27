@@ -1,11 +1,11 @@
 Name:		broadcom-wl
-Version:	5.60.48.36
+Version:	5.100.82.38
 Release:	1%{?dist}
 Summary:	Common files for Broadcom 802.11 STA driver
 Group:		System Environment/Kernel
 License:	Redistributable, no modification permitted
 URL:		http://www.broadcom.com/support/802.11/linux_sta.php
-Source0:	http://www.broadcom.com/docs/linux_sta/hybrid-portsrc-x86_32-v5.60.48.36.tar.gz
+Source0:	http://www.broadcom.com/docs/linux_sta/hybrid-portsrc_x86_32-v5_100_82_38.tar.gz
 Source1:	http://www.broadcom.com/docs/linux_sta/README.txt
 Source2:	broadcom-wl-blacklist.conf
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -46,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/modprobe.d/broadcom-wl-blacklist.conf
 
 %changelog
+* Thu Jan 27 2011 Chris Nolan <chris@cenolan.com> - 5.100.82.38
+- updated version to  5.100.82.38
+
 * Mon Feb 22 2010 Chris Nolan <chris@cenolan.com> - 5.60.48.36-1
 - updated version to 5.60.48.36
 
