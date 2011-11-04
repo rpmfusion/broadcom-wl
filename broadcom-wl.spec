@@ -1,6 +1,6 @@
 Name:		broadcom-wl
 Version:	5.100.82.38
-Release:	1%{?dist}
+Release:	1%{?dist}.1
 Summary:	Common files for Broadcom 802.11 STA driver
 Group:		System Environment/Kernel
 License:	Redistributable, no modification permitted
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/modprobe.d/broadcom-wl-blacklist.conf
 
 %changelog
+* Sat Nov 05 2011 Nicolas Viéville <nicolas.vieville@univ-valenciennes.fr> - 5.100.82.38-1.1
+- Rebuilt for F-16
+
 * Fri Nov 04 2011 Nicolas Vieville <nicolas.vieville@univ-valenciennes.fr> - 5.100.82.38-1
 - Updated version to 5.100.82.38
 
