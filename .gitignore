@@ -1,5 +1,5 @@
-hybrid-portsrc_x86_64-v5_100_82_38.tar.gz
-hybrid-portsrc_x86_32-v5_100_82_38.tar.gz
-README.txt
-bcma.txt
+hybrid-portsrc_x86_64-v5_100_82_112.tar.gz
+hybrid-portsrc_x86_32-v5_100_82_112.tar.gz
+broadcom-wl-kmodtool-excludekernel-filterfile
 broadcom-wl-blacklist.conf
+README.txt
