@@ -1,5 +1,4 @@
-cac172f7422fa43264049c7065fe21d6  hybrid-portsrc_x86_64-v5_100_82_38.tar.gz
-c0074a1622c75916442e26763ddf47d0  hybrid-portsrc_x86_32-v5_100_82_38.tar.gz
-24976921c7b8854ed2cd56fbc5b1c13c  README.txt
-521622b664cdfe9a6e2b1aea1b2e5c7b  bcma.txt
-c655110a94f44daab8192831cb6a4161  broadcom-wl-blacklist.conf
+62d04d148b99f993ef575a71332593a9  hybrid-portsrc_x86_32-v5_100_82_112.tar.gz
+310d7ce233a9a352fbe62c451b2ea309  hybrid-portsrc_x86_64-v5_100_82_112.tar.gz
+24e1e33923375ce9ad4c049f27286fd9  broadcom-wl-blacklist.conf
+6fd54aac59a53559d01520f35500693b  README.txt

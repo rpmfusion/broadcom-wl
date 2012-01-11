@@ -1,17 +1,15 @@
 Name:		broadcom-wl
-Version:	5.100.82.38
-Release:	2%{?dist}
+Version:	5.100.82.112
+Release:	1%{?dist}
 Summary:	Common files for Broadcom 802.11 STA driver
 Group:		System Environment/Kernel
 License:	Redistributable, no modification permitted
 URL:		http://www.broadcom.com/support/802.11/linux_sta.php
-Source0:	http://dl.dropbox.com/u/25699833/rpmfusion/sources/broadcom/5_100_82_38/hybrid-portsrc_x86_32-v5_100_82_38.tar.gz
-Source1:	http://dl.dropbox.com/u/25699833/rpmfusion/sources/broadcom/5_100_82_38/hybrid-portsrc_x86_64-v5_100_82_38.tar.gz
-Source2:	http://dl.dropbox.com/u/25699833/rpmfusion/sources/broadcom/5_100_82_38/README.txt
+Source0:	http://www.broadcom.com/docs/linux_sta/hybrid-portsrc_x86_32-v5_100_82_112.tar.gz
+Source1:	http://www.broadcom.com/docs/linux_sta/hybrid-portsrc_x86_64-v5_100_82_112.tar.gz
+Source2:	http://www.broadcom.com/docs/linux_sta/README.txt
 Source3:	broadcom-wl-blacklist.conf
-Source4:	http://dl.dropbox.com/u/25699833/rpmfusion/sources/broadcom/5_100_82_38/bcma.txt
-Patch0:		broadcom-wl-5.100.82.38-license.patch
-Patch1:		http://dl.dropbox.com/u/25699833/rpmfusion/sources/broadcom/5_100_82_38/5_100_82_38.patch
+Patch0:		broadcom-wl-5.100.82.112-license.patch
 
 BuildArch:	noarch
 Provides:	wl-kmod-common = %{version}
@@ -30,10 +28,9 @@ BCM43228-based hardware.
 %setup -q -c
 iconv -f iso8859-1 -t UTF8 lib/LICENSE.txt -o lib/LICENSE.txt
 sed -i 's/\r$//' lib/LICENSE.txt
-cp -p %{SOURCE2} %{SOURCE4} .
-chmod 644 lib/LICENSE.txt README.txt bcma.txt
+cp -p %{SOURCE2} .
+chmod 644 lib/LICENSE.txt README.txt
 %patch0 -p1 -b .license
-%patch1 -p0 -b .init_MUTEX
 
 %build
 echo "Nothing to build."
@@ -48,10 +45,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc lib/LICENSE.txt README.txt bcma.txt
+%doc lib/LICENSE.txt README.txt
 %config(noreplace) %{_sysconfdir}/modprobe.d/broadcom-wl-blacklist.conf
 
 %changelog
+* Wed Jan 11 2012 Nicolas Vieville <nicolas.vieville@univ-valenciennes.fr> - 5.100.82.112-1
+- Updated version to 5.100.82.112
+- Cleaned-up broadcom-wl-blacklist.conf
+
 * Wed Nov 16 2011 Nicolas Vieville <nicolas.vieville@univ-valenciennes.fr> - 5.100.82.38-2
 - Added brcmsmac to broadcom-wl-blacklist.conf
 

@@ -1,9 +1,10 @@
 Broadcom Linux hybrid wireless driver
+Version 5.100.82.1XX
 
 DISCLAIMER
 ----------
 This is an Official Release of Broadcom's hybrid Linux driver for use with 
-Broadcom-based hardware.
+Broadcom based hardware.
 
 WHERE TO GET THE RELEASE
 ------------------------
@@ -38,32 +39,36 @@ release from Broadcom.
 SUPPORTED DEVICES
 -----------------
 The cards with the following PCI Device IDs are supported with this driver.
-Both Broadcom and and Dell product names are described.  Cards not listed here
-may also work.
+Both Broadcom and and Dell product names are described.   Cards not listed
+here may also work.
 
- 	    BRCM		    PCI	PCI		  Dell
-	    Product Name	  Vendor ID	Device ID	Product ID
-          -------------	 ----------	---------   -----------
+	   BRCM		    PCI		  PCI		  Dell
+	  Product Name	  Vendor ID	Device ID	Product ID
+          -------------	 ----------	---------   	-----------
           4311 2.4 Ghz	    0x14e4	0x4311  	Dell 1390
           4311 Dualband	    0x14e4	0x4312  	Dell 1490
-          4311 5 Ghz	    0x14e4  0x4313  	
+          4311 5 Ghz	    0x14e4    	0x4313  	
           4312 2.4 Ghz	    0x14e4	0x4315  	Dell 1395
-          4313 2.4 Ghz	    0x14e4	0x4727 	Dell 1501
+          4313 2.4 Ghz	    0x14e4	0x4727 		Dell 1501
           4321 Dualband	    0x14e4	0x4328  	Dell 1505
           4321 Dualband	    0x14e4	0x4328  	Dell 1500
           4321 2.4 Ghz	    0x14e4	0x4329  	
           4321 5 Ghz        0x14e4	0x432a  	
-          4322 Dualband     0x14e4	0x432b  	Dell 1510
+          4322 	Dualband    0x14e4	0x432b  	Dell 1510
           4322 2.4 Ghz      0x14e4 	0x432c  	
           4322 5 Ghz        0x14e4 	0x432d  	
           43224 Dualband    0x14e4	0x4353  	Dell 1520
           43225 2.4 Ghz     0x14e4	0x4357  	
-          43227 2.4 Ghz     0x14e4  0x4358
-          43228 Dualband    0x14e4  0x4359      Dell 1530
+          43227 2.4 Ghz     0x14e4	0x4358
+          43228 Dualband    0x14e4	0x4359  	Dell 1530
 
 To find the Device ID's of Broadcom cards on your machines do:
 # lspci -n | grep 14e4
 
+NOTABLE CHANGES
+---------------
+	Added Cfg80211 support (described below)
+	Added Monitor mode     (described below)
 
 REQUIREMENTS
 ------------
@@ -72,7 +77,6 @@ packages, header files and libraries to build a standard a kernel module.
 This usually is done by installing the kernel developer or kernel source 
 package and varies from distro to distro. Consult the documentation for
 your specific OS.
-
 
 If you cannot successfully build a module that comes with your distro's 
 kernel developer or kernel source package, you will not be able to build 
@@ -102,13 +106,13 @@ BUILD INSTRUCTIONS
 ------------------
 1. Setup the directory by untarring the proper tarball:
 
-For 32 bit: 	hybrid-portsrc_x86-32_v5.100.82.38.tar.gz
-For 64 bit: 	hybrid-portsrc_x86-64_v5.100.82.38.tar.gz
+For 32 bit: 	hybrid-portsrc.tar.gz
+For 64 bit: 	hybrid-portsrc-x86_64.tar.gz
 
 Example:
 # mkdir hybrid_wl
 # cd hybrid_wl
-# tar xzf <path>/hybrid-portsrc_x86-32_v5.100.82.38.tar.gz
+# tar xzf <path>/hybrid-portsrc.tar or <path>/hybrid-portsrc-x86_64.tar.gz
 
 2. Build the driver as a Linux loadable kernel module (LKM):
 
@@ -120,6 +124,15 @@ directory.
 
 If your driver does not build, check to make sure you have installed the
 kernel package described in the requirements above.
+
+This driver now supports the new linux cfg80211 wireless configuration API in
+addition to the older Wireless Extensions (Wext).  The makefile will
+automaticly build the right version for your system but it can be
+overridden if needed:
+
+# make API=WEXT
+ or
+# make API=CFG80211
 
 INSTALL INSTRUCTIONS
 --------------------
@@ -143,26 +156,28 @@ Fresh installation:
 ------------------
 1: Remove any other drivers for the Broadcom wireless device.
 
-There are several open source drivers that are used to drive Broadcom 802.11
-chips such as b43 and ssb. They will conflict with this driver and need
-to be uninstalled before this driver can be installed.  Any previous 
-revisions of the wl driver also need to be removed.
+There are several other drivers (besides this one) that can drive 
+Broadcom 802.11 chips such as b43, bcma and ssb. They will conflict with 
+this driver and need to be uninstalled before this driver can be installed.
+Any previous revisions of the wl driver also need to be removed.
 
 Note: On some systems such as Ubuntu 9.10, the ssb module may load during
 boot even though it is blacklisted (see note under Common Issues on how to
-resolve this). Nevertheless, ssb still must be removed
+resolve this. Nevertheless, ssb still must be removed
 (by hand or script) before wl is loaded. The wl driver will not function 
 properly if ssb the module is loaded.
 
-# lsmod  | grep "b43\|ssb\|wl"
+# lsmod  | grep "b43\|ssb\|bcma\|wl"
 
 If any of these are installed, remove them:
 # rmmod b43
 # rmmod ssb
+# rmmod bcma
 # rmmod wl
 
 To blacklist these drivers and prevent them from loading in the future:
 # echo "blacklist ssb" >> /etc/modprobe.d/blacklist.conf
+# echo "blacklist bcma" >> /etc/modprobe.d/blacklist.conf
 # echo "blacklist b43" >> /etc/modprobe.d/blacklist.conf
 
 2: Insmod the driver.
@@ -176,6 +191,11 @@ your system.
   or 
 # modprobe ieee80211_crypt_tkip
 
+If your using the cfg80211 version of the driver, then cfg80211 needs to be
+loaded:
+
+# modprobe cfg80211
+
 Then:
 # insmod wl.ko
 
@@ -183,38 +203,42 @@ wl.ko is now operational.  It may take several seconds for the Network
 Manager to notice a new network driver has been installed and show the
 surrounding wireless networks.
 
+If there was an error, see Common issues below.
+
 Common issues:
 ----------------
-
 * After the insmod you may see this message:
-  "WARNING: modpost: missing MODULE_LICENSE()"
+  WARNING: modpost: missing MODULE_LICENSE()
   It is expected, not harmful and can be ignored.
 
-* You might see this message:
-  "insmod: error inserting 'wl.ko': -1 Unknown symbol in module"
-  Usually this means that the wlan security module (as mentioned above) is
-  not loaded. Try this:
-  # modprobe   lib80211 
-    or 
-  # modprobe ieee80211_crypt_tkip
-    and then re-try to insmod the wl driver.
-  # insmod wl.ko
+* If you see this message:
 
+  "insmod: error inserting 'wl.ko': -1 Unknown symbol in module"
+
+  Usually this means that one of the required modules (as mentioned above) is
+  not loaded. Try this:
+  # modprobe lib80211 or ieee80211_crypt_tkip (depending on your os)
+  # modprobe cfg80211
+    
+  Now re-try to insmod the wl driver:
+  # insmod wl.ko
+  
 * If the wl driver loads but doesn't seem to do anything:
   the ssb module may be the cause.  Sometimes blacklisting ssb may not
   be enough to prevent it from loading and it loads anyway. (This is mostly
   seen on Ubuntu/Debian systems).
 
-  Check to see if ssb, wl or b43 is loaded:
-  # lsmod  | grep "b43\|ssb\|wl"
+  Check to see if ssb, bcma, wl or b43 is loaded:
+  # lsmod | grep "ssb\|wl\|b43\|bcma"
 
   If any of these are installed, remove them:
-  # rmmod b43
   # rmmod ssb
+  # rmmod bcma
   # rmmod wl
+  # insmod wl
 
-  Back up the current boot ramfs and generate a new one.
-  # cp /boot/initrd.img-`uname -r`  somewheresafe
+  Back up the current boot ramfs and generate a new one:
+  # cp /boot/initrd.img-`uname -r` somewheresafe
   # update-initramfs -u
   # reboot
 
@@ -248,65 +272,66 @@ the user to lower the tx power to levels below the regulatory limit.
 Internally, the actual tx power is always kept within regulatory limits
 no matter what the user request is set to.
 
-WHAT'S NEW IN RELEASE 5.100.82.38
----------------------------------
-+ Support for bcm43227 and bcm43228
-+ Fix for issue where iwconfig was sometime reporting rate incorrectly
-+ Supports rfkill in kernels 2.6.31 to 2.6.36
-+ Supports scan complete event (SIOCGIWSCAN)
-+ Adds EAGAIN (busy signal) to query of scan results
 
-WHAT'S NEW IN RELEASE 5.100.57.15
----------------------------------
-+ Following fixes (issues introduced in 5.100.57.13)
-    Issue #87477 - 4313: DUT is not able to associate in WPA2-PSK TKIP/AES
-    Issue #87533 - NetworkManager: 4313: Unable to associate to APs with WPA2-PSK
+ISSUES FIXED AND WHAT'S NEW IN THIS RELEASE
+-------------------------------------------
++ Added cfg80211 API support. The choice of API is done at compile time. If
+kernel version >= 2.6.32, cfg80211 is used, otherwise wireless extension 
+is used. (End users should notice little difference.)
++ Supports Linux kernel 2.6.38
++ Fix for problem with rebooting while wireless disabled via airline switch.
++ Fixed a kernel panic observed on some 64-bit systems
 
-WHAT'S NEW IN RELEASE 5.100.57.13
----------------------------------
-+ 4313 PHY fixes to improve throughput stability at different ranges
-+ Fix for interop issues with different APs
-+ Fix for hangs seen during Fn-F2 sequence
-- Support for rfkill in kernels 2.6.31 to 2.6.36
+HOW TO USE MONITOR MODE
+-----------------------
+To enable monitor mode:
+$ echo 1 > /proc/brcm_monitor0
 
-WHAT'S NEW IN RELEASE 5.60.246.6
---------------------------------
-+ Supports rfkill in kernels 2.6.31 to 2.6.36
-+ Fix for compile error with multicast list in kernel 2.6.34
-+ Fix for #76743 - Ubuntu9.04: Network manager displays n/w's with radio disabled
+Enabling monitor mode will create a 'prism0' network interface. Wireshark and
+other netwokk tools can use this new prism0 interface.
 
-WHAT'S NEW IN RELEASE 5.60.246.2
---------------------------------
-+ Supports up to linux kernel 2.6.36 (from 2.6.32)
-+ Fix for #86668: [Canonical] Bug #611575/617369: System will hang if
-    you use the F2 hot key to enable/disable wireless quickly while
-    wireless is still in the process of re-association with AP
+To disable monitor mode:
+$ echo 0 > /proc/brcm_monitor0
 
-WHAT'S NEW IN RELEASE 5.60.48.36
---------------------------------
-+ Supports up to linux kernel 2.6.32
+
+ISSUES FIXED AND WHAT'S NEW IN RECENT RELEASES
+-------------------------------------------
++ Supports monitor mode
++ Supports cfg80211
 + Supports hidden networks
-+ Supports rfkill in kernels < 2.6.31
-+ Setting power level via 'iwconfig eth1 txpower X' now operational
-+ Support for bcm4313
-+ Additional channels in both 2.4 and 5 Ghz bands
-+ Fixed issue with tkip group keys that caused this message to repeat often:
-    TKIP: RX tkey->key_idx=2 frame keyidx=1 priv=ffff8800cf80e840
-+ Following fixes
-    Issue #72216 - Ubuntu 8.04: standby/resume with WPA2 and wpa_supplicant causes
-                     a continuous assoc/disassoc loop (issue in 2.6.24 kernel)
-    Issue #72324 - Ubuntu 8.04: cannot ping when Linux STA is IBSS creator with WEP
-    Issue #76739 - Ubuntu 9.04: unable to connect to hidden network after stdby/resume
-    Issue #80392 - S4 resume hang with SuSE SLED 11 and 43225
-    Issue #80792 - LSTA is not able to associate to AP with transition from AES to TKIP encryption
++ Supports rfkill
+
 
 KNOWN ISSUES AND LIMITATIONS
 ----------------------------
 #72238 - 20% lower throughput on channels 149, 153, 157, and 161
-#76793 - Ubuntu9.04: STA fails to create IBSS network in 5 Ghz band
-#81392 - Unable to transfer data over ad-hoc network created by NetworkManager (iwconfig OK)
-#81452 - STA unable to associate to AP when PEAPv1-MSCHAPv2 authentication is used
-#87531 - WPASUP: 4313: WPA Supplicant crashes when trying to connect to 802.1x
+#72324 - Ubuntu 8.04: cannot ping when Linux STA is IBSS creator with WEP
+enabled
+#72216 - Ubuntu 8.04: standby/resume with WPA2 and wpa_supplicant causes
+a continuous assoc/disassoc loop (issue with wpa_supplicant, restarting
+wpa_supplicant fixes the issue)
+#76739 Ubuntu9.04: unable to connect to hidden network after stdby/resume
+#76793 Ubuntu9.04: STA fails to create IBSS network in 5 Ghz band
+
+
+KNOWN ISSUES AND LIMITATIONS IN EXTERNAL COMPONENTS
+----------------------------
+
+wpa_supplicant 0.6.3 + nl80211 + WEP - (Note: This would only affect you if 
+you are using wpa_supplicant directly from the command line and specify 
+nl80211 interface, e.g. "wpa_supplicant -Dnl80211 -ieth1 ..". If you are using
+network manager GUI to connect it should work file.)
+wpa_supplicant 0.6.3 might have a bug that affect WEP connections created 
+through nl80211. Upgrade to wpa_supplicant to 0.7.3 would solve this problem.
+
+Ubuntu 10.10 kernel + nl80211 + WPA/WPA2 - (Note: This would only affect you if 
+you are using wpa_supplicant directly from the command line and specify 
+nl80211 interface, e.g. "wpa_supplicant -Dnl80211 -ieth1 ..". If you are using
+network manager GUI to connect it should work file.)
+Some kernel versions of Ubuntu such as 2.6.35-22 (released with Ubuntu 
+10.10) may have problems that affect WPA/WPA2 connections created through 
+nl80211. Upgrade to 2.6.35-25 or later should solve this problem.
+
 
 HOW TO INSTALL A PRE-COMPILED DRIVER
 -----------------------------------
