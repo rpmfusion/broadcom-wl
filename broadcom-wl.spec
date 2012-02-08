@@ -1,6 +1,6 @@
 Name:		broadcom-wl
 Version:	5.100.82.112
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Common files for Broadcom 802.11 STA driver
 Group:		System Environment/Kernel
 License:	Redistributable, no modification permitted
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/modprobe.d/broadcom-wl-blacklist.conf
 
 %changelog
+* Thu Feb 09 2012 Nicolas Chauvet <kwizart@gmail.com> - 5.100.82.112-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Mon Nov 07 2011 Nicolas Vieville <nicolas.vieville@univ-valenciennes.fr> - 5.100.82.112-1
 - Updated version to 5.100.82.112
 
