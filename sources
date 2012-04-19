@@ -1,5 +1,4 @@
 310d7ce233a9a352fbe62c451b2ea309  hybrid-portsrc_x86_64-v5_100_82_112.tar.gz
 62d04d148b99f993ef575a71332593a9  hybrid-portsrc_x86_32-v5_100_82_112.tar.gz
-5df50b59ac8a311c81c9ad569ffc2225  broadcom-wl-kmodtool-excludekernel-filterfile
-7b6a8f3ca263a3bb2e49124ade3cf010  broadcom-wl-blacklist.conf
+24e1e33923375ce9ad4c049f27286fd9  broadcom-wl-blacklist.conf
 6fd54aac59a53559d01520f35500693b  README.txt
