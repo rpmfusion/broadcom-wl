@@ -1,6 +1,6 @@
 Name:		broadcom-wl
 Version:	5.100.82.112
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Common files for Broadcom 802.11 STA driver
 Group:		System Environment/Kernel
 License:	Redistributable, no modification permitted
