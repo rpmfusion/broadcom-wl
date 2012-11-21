@@ -1,6 +1,6 @@
 Name:		broadcom-wl
 Version:	5.100.82.112
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Common files for Broadcom 802.11 STA driver
 Group:		System Environment/Kernel
 License:	Redistributable, no modification permitted
@@ -9,6 +9,9 @@ Source0:	http://www.broadcom.com/docs/linux_sta/hybrid-portsrc_x86_32-v5_100_82_
 Source1:	http://www.broadcom.com/docs/linux_sta/hybrid-portsrc_x86_64-v5_100_82_112.tar.gz
 Source2:	http://www.broadcom.com/docs/linux_sta/README.txt
 Source3:	broadcom-wl-blacklist.conf
+Source4:	20-wl.conf
+Source5:	api
+Source6:	fedora.readme
 Patch0:		broadcom-wl-5.100.82.112-license.patch
 
 BuildArch:	noarch
@@ -29,7 +32,8 @@ BCM43228-based hardware.
 iconv -f iso8859-1 -t UTF8 lib/LICENSE.txt -o lib/LICENSE.txt
 sed -i 's/\r$//' lib/LICENSE.txt
 cp -p %{SOURCE2} .
-chmod 644 lib/LICENSE.txt README.txt
+cp -p %{SOURCE6} .
+chmod 644 lib/LICENSE.txt README.txt fedora.readme
 %patch0 -p1 -b .license
 
 %build
@@ -37,18 +41,29 @@ echo "Nothing to build."
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p ${RPM_BUILD_ROOT}/%{_sysconfdir}/modprobe.d/
-install -p -m0644 %{SOURCE3} ${RPM_BUILD_ROOT}/%{_sysconfdir}/modprobe.d/ 
+mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/modprobe.d/
+install -p -m0644 %{SOURCE3} ${RPM_BUILD_ROOT}%{_sysconfdir}/modprobe.d/ 
+mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/dracut.conf.d/
+install -p -m0644 %{SOURCE4} ${RPM_BUILD_ROOT}%{_sysconfdir}/dracut.conf.d/
+mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/akmods/akmod-wl/
+install -p -m0644 %{SOURCE5} ${RPM_BUILD_ROOT}%{_sysconfdir}/akmods/akmod-wl/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc lib/LICENSE.txt README.txt
+%doc lib/LICENSE.txt README.txt fedora.readme
 %config(noreplace) %{_sysconfdir}/modprobe.d/broadcom-wl-blacklist.conf
+%config(noreplace) %{_sysconfdir}/dracut.conf.d/20-wl.conf
+%config(noreplace) %{_sysconfdir}/akmods/akmod-wl/api
 
 %changelog
+* Wed Nov 21 2012 Nicolas Viéville <nicolas.vieville@univ-valenciennes.fr> - 5.100.82.112-3
+- Added /etc/dracut.conf.d/20-wl.conf to workaround #2526
+- Added /etc/akmods/akmod-wl/api to workaround #2548 #2562
+- fedora.readme added to explain usage of the above
+
 * Wed Nov 16 2011 Nicolas Vieville <nicolas.vieville@univ-valenciennes.fr> - 5.100.82.112-2
 - Added brcmsmac to broadcom-wl-blacklist.conf
 
