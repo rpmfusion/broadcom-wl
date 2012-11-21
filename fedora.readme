@@ -1,0 +1,108 @@
+This file provides some basic information about Broadcom STA wireless 
+driver configuration files on Fedora with RPMFusion packages.
+------------------------------------------------------------------------
+Version 0.1 - Tue Nov 06 2012 - initial release
+------------------------------------------------------------------------
+
+
+0. Cautions
+===========
+
+The files mentioned in this document should not be used in a wireless
+operational system. Only failing wireless system should give a try to 
+this file proposed solutions.
+Use them at your own risk and only if your system could not boot 
+properly or if your Broadcom wireless device doesn't work correctly.
+
+
+1. Choosing between WEXT or CFG80211 API
+========================================
+
+Some configurations require the user to choose between the WEXT API or 
+CFG80211 API in order to get Broadcom STA wireless driver properly 
+loaded, and correctly usable by third-party softwares.
+Since this driver cannot be configured on-the-fly, the only solution is
+to use RPMFusion akmod-wl package only and set the 
+/etc/akmods/akmod-wl/api file correctly.
+No RPMFusion kmod-wl package installed will take care of the settings 
+provided in the /etc/akmods/akmod-wl/api file, and using this file 
+requires an exclusive usage of the akmod-wl package.
+
+/etc/akmods/akmod-wl/api file should contain only one line depending on 
+the API choosen:
+
+API=WEXT
+
+to force building the module with WEXT API or 
+
+API=CFG80211
+
+to force building the module with CFG80211 API or
+
+#API=WEXT
+
+or 
+
+#API=CFG80211
+
+to let the Broadcom included Makefile do the right choice according to 
+your current kernel version.
+
+#API=WEXT is the default setting.
+
+Once this file modified, one should rebuild current kmod-wl package for
+the current kernel by typing this command:
+
+akmods --force --kernel `uname -r` --akmod wl
+
+Reboot should be needed in order to get last wl module correctly loaded.
+
+Caution : 
+---------
+
+WEXT API will be dropped from future kernels according to
+https://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commitdiff;h=10bab00afed042c1a38ed5ffb135e2aea5ce1277
+
+This workaround should only used on compatibles kernels with the 
+WEXT API.
+One should considere to switch to higher wireless compatible Fedora 
+Release in order to get the most recent CFG80211 API with most recent 
+kernel.
+
+This workaround will be dropped from the future broadcom-wl, kmod-wl and 
+akmod-wl packages when the WEXT API will be dropped too.
+
+
+2. Initramfs configuration file usage
+=====================================
+
+Please read comments in /etc/dracut.conf.d/20-wl.conf file in order to 
+configure loading modules needed by the Broadcom STA wireless driver in
+kernel's init ramdisks.
+
+Edit the /etc/dracut.conf.d/20-wl.conf file and comment/uncomment the 
+one line "add_drivers+=" directive depending on your choice.
+
+For example
+
+# nano /etc/dracut.conf.d/20-wl.conf
+
+or 
+
+# sudo nano /etc/dracut.conf.d/20-wl.conf
+
+should let you to modify this file, ctrl+o would save the file, and
+ctrl+x should quit nano.
+
+Then use dracut command to rebuild your current kernel initramfs file.
+See http://people.redhat.com/harald/dracut.html#id489921 and 
+http://people.redhat.com/harald/dracut.html#dracutconf5 for complete 
+explanations on using dracut.
+
+
+3. Support
+==========
+
+Support only about these configuration files will be provided on:
+
+https://bugzilla.rpmfusion.org/enter_bug.cgi?product=Fedora
