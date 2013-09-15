@@ -1,18 +1,18 @@
 Name:       broadcom-wl
-Version:    5.100.82.112
-Release:    4%{?dist}
+Version:    6.30.223.141
+Release:    1%{?dist}
 Summary:    Common files for Broadcom 802.11 STA driver
 Group:      System Environment/Kernel
 License:    Redistributable, no modification permitted
 URL:        http://www.broadcom.com/support/802.11/linux_sta.php
-Source0:    http://www.broadcom.com/docs/linux_sta/hybrid-portsrc_x86_32-v5_100_82_112.tar.gz
-Source1:    http://www.broadcom.com/docs/linux_sta/hybrid-portsrc_x86_64-v5_100_82_112.tar.gz
+Source0:    http://www.broadcom.com/docs/linux_sta/hybrid-v35-nodebug-pcoem-6_30_223_141.tar.gz
+Source1:    http://www.broadcom.com/docs/linux_sta/hybrid-v35_64-nodebug-pcoem-6_30_223_141.tar.gz
 Source2:    http://www.broadcom.com/docs/linux_sta/README.txt
 Source3:    broadcom-wl-blacklist.conf
 Source4:    20-wl.conf
 Source5:    api
 Source6:    fedora.readme
-Patch0:     broadcom-wl-5.100.82.112-license.patch
+Patch0:     broadcom-wl-001_license.patch
 
 BuildArch:  noarch
 Provides:   wl-kmod-common = %{version}
@@ -24,8 +24,8 @@ ExcludeArch:    ppc ppc64
 This package contains the license, README.txt and configuration 
 files for the Broadcom 802.11 Linux STA Driver for WiFi, a Linux 
 device driver for use with Broadcom's BCM4311-, BCM4312-, BCM4313-, 
-BCM4321-, BCM4322-, BCM43224-, and BCM43225-, BCM43227- and 
-BCM43228-based hardware.
+BCM4321-, BCM4322-, BCM43142-, BCM43224-, BCM43225-, BCM43227-, 
+BCM43228-, BCM4331-, BCM4360 and -BCM4352- based hardware.
 
 %prep
 %setup -q -c
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/akmods/akmod-wl/api
 
 %changelog
+* Sat Sep 14 2013 Nicolas Viéville <nicolas.vieville@univ-valenciennes.fr> - 6.30.223.141-1
+- Upstream update to 6.30.223.141
+
 * Mon Jan 21 2013 Nicolas Viéville <nicolas.vieville@univ-valenciennes.fr> - 5.100.82.112-4
 - move broadcom-wl-blacklist.conf to %%{_prefix}/lib/modprobe.d/ since new dracut in F-18
 - install section cleaned-up
@@ -77,13 +80,13 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Feb 09 2012 Nicolas Chauvet <kwizart@gmail.com> - 5.100.82.112-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
-* Mon Nov 07 2011 Nicolas Vieville <nicolas.vieville@univ-valenciennes.fr> - 5.100.82.112-1
+* Mon Nov 07 2011 Nicolas Viéville <nicolas.vieville@univ-valenciennes.fr> - 5.100.82.112-1
 - Updated version to 5.100.82.112
 
 * Sat Nov 05 2011 Nicolas Viéville <nicolas.vieville@univ-valenciennes.fr> - 5.100.82.38-1.1
 - Rebuilt for F-16
 
-* Fri Nov 04 2011 Nicolas Vieville <nicolas.vieville@univ-valenciennes.fr> - 5.100.82.38-1
+* Fri Nov 04 2011 Nicolas Viéville <nicolas.vieville@univ-valenciennes.fr> - 5.100.82.38-1
 - Updated version to 5.100.82.38
 
 * Tue Feb 01 2011 Chris Nolan <chris@cenolan.com> - 5.60.48.36
