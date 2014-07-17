@@ -1,13 +1,13 @@
 Name:       broadcom-wl
-Version:    6.30.223.141
-Release:    2%{?dist}
+Version:    6.30.223.248
+Release:    1%{?dist}
 Summary:    Common files for Broadcom 802.11 STA driver
 Group:      System Environment/Kernel
 License:    Redistributable, no modification permitted
 URL:        http://www.broadcom.com/support/802.11/linux_sta.php
-Source0:    http://www.broadcom.com/docs/linux_sta/hybrid-v35-nodebug-pcoem-6_30_223_141.tar.gz
-Source1:    http://www.broadcom.com/docs/linux_sta/hybrid-v35_64-nodebug-pcoem-6_30_223_141.tar.gz
-Source2:    http://www.broadcom.com/docs/linux_sta/README.txt
+Source0:    http://www.broadcom.com/docs/linux_sta/hybrid-v35-nodebug-pcoem-6_30_223_248.tar.gz
+Source1:    http://www.broadcom.com/docs/linux_sta/hybrid-v35_64-nodebug-pcoem-6_30_223_248.tar.gz
+Source2:    http://www.broadcom.com/docs/linux_sta/README_6.30.223.248.txt
 Source3:    broadcom-wl-blacklist.conf
 Source4:    20-wl.conf
 Source5:    api
@@ -33,7 +33,7 @@ iconv -f iso8859-1 -t UTF8 lib/LICENSE.txt -o lib/LICENSE.txt
 sed -i 's/\r$//' lib/LICENSE.txt
 cp -p %{SOURCE2} .
 cp -p %{SOURCE6} .
-chmod 644 lib/LICENSE.txt README.txt fedora.readme
+chmod 644 lib/LICENSE.txt README_6.30.223.248.txt fedora.readme
 %patch0 -p1 -b .license
 
 %build
@@ -53,12 +53,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc lib/LICENSE.txt README.txt fedora.readme
+%doc lib/LICENSE.txt README_6.30.223.248.txt fedora.readme
 %config(noreplace) %{_prefix}/lib/modprobe.d/broadcom-wl-blacklist.conf
 %config(noreplace) %{_sysconfdir}/dracut.conf.d/20-wl.conf
 %config(noreplace) %{_sysconfdir}/akmods/akmod-wl/api
 
 %changelog
+* Tue Jul 15 2014 Nicolas Viéville <nicolas.vieville@univ-valenciennes.fr> - 6.30.223.248-1
+- Upstream update to 6.30.223.248
+
 * Mon Sep 30 2013 Nicolas Chauvet <kwizart@gmail.com> - 6.30.223.141-2
 - Rebuilt
 
