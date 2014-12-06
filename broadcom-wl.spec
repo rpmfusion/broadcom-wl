@@ -1,6 +1,6 @@
 Name:       broadcom-wl
 Version:    6.30.223.248
-Release:    1%{?dist}
+Release:    2%{?dist}
 Summary:    Common files for Broadcom 802.11 STA driver
 Group:      System Environment/Kernel
 License:    Redistributable, no modification permitted
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/akmods/akmod-wl/api
 
 %changelog
+* Sat Dec 06 2014 Nicolas Chauvet <kwizart@gmail.com> - 6.30.223.248-2
+- Rebuilt for f21
+
 * Tue Jul 15 2014 Nicolas Viéville <nicolas.vieville@univ-valenciennes.fr> - 6.30.223.248-1
 - Upstream update to 6.30.223.248
 
