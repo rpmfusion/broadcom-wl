@@ -1,13 +1,13 @@
 Name:       broadcom-wl
 Version:    6.30.223.248
-Release:    2%{?dist}
+Release:    3%{?dist}
 Summary:    Common files for Broadcom 802.11 STA driver
 Group:      System Environment/Kernel
 License:    Redistributable, no modification permitted
-URL:        http://www.broadcom.com/support/802.11/linux_sta.php
-Source0:    http://www.broadcom.com/docs/linux_sta/hybrid-v35-nodebug-pcoem-6_30_223_248.tar.gz
-Source1:    http://www.broadcom.com/docs/linux_sta/hybrid-v35_64-nodebug-pcoem-6_30_223_248.tar.gz
-Source2:    http://www.broadcom.com/docs/linux_sta/README_6.30.223.248.txt
+URL:        https://www.broadcom.com/support/?gid=1
+Source0:    https://www.broadcom.com/docs/linux_sta/hybrid-v35-nodebug-pcoem-6_30_223_248.tar.gz
+Source1:    https://www.broadcom.com/docs/linux_sta/hybrid-v35_64-nodebug-pcoem-6_30_223_248.tar.gz
+Source2:    https://www.broadcom.com/docs/linux_sta/README_6.30.223.248.txt
 Source3:    broadcom-wl-blacklist.conf
 Source4:    20-wl.conf
 Source5:    api
@@ -41,8 +41,8 @@ echo "Nothing to build."
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install    -m 0755 -d         $RPM_BUILD_ROOT%{_prefix}/lib/modprobe.d/
-install -p -m 0644 %{SOURCE3} $RPM_BUILD_ROOT%{_prefix}/lib/modprobe.d/
+install    -m 0755 -d         ${RPM_BUILD_ROOT}%{_prefix}/lib/modprobe.d/
+install -p -m 0644 %{SOURCE3} ${RPM_BUILD_ROOT}%{_prefix}/lib/modprobe.d/
 install    -m 0755 -d         ${RPM_BUILD_ROOT}%{_sysconfdir}/dracut.conf.d/
 install -p -m 0644 %{SOURCE4} ${RPM_BUILD_ROOT}%{_sysconfdir}/dracut.conf.d/
 install    -m 0755 -d         ${RPM_BUILD_ROOT}%{_sysconfdir}/akmods/akmod-wl/
@@ -53,12 +53,22 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc lib/LICENSE.txt README_6.30.223.248.txt fedora.readme
+%doc README_6.30.223.248.txt fedora.readme
+%if 0%{?rhel} || 0%{?fedora} < 21
+%doc lib/LICENSE.txt
+%else
+%license lib/LICENSE.txt
+%endif
 %config(noreplace) %{_prefix}/lib/modprobe.d/broadcom-wl-blacklist.conf
 %config(noreplace) %{_sysconfdir}/dracut.conf.d/20-wl.conf
 %config(noreplace) %{_sysconfdir}/akmods/akmod-wl/api
 
 %changelog
+* Wed May 20 2015 Nicolas Viéville <nicolas.vieville@univ-valenciennes.fr> - 6.30.223.248-3
+- Update new Broadcom upstream URLs in SPEC file
+- Update to move license file to %license
+- install section cleaned-up
+
 * Sat Dec 06 2014 Nicolas Chauvet <kwizart@gmail.com> - 6.30.223.248-2
 - Rebuilt for f21
 
