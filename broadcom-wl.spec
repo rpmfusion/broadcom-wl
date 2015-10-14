@@ -1,18 +1,17 @@
 Name:       broadcom-wl
-Version:    6.30.223.248
-Release:    3%{?dist}
+Version:    6.30.223.271
+Release:    1%{?dist}
 Summary:    Common files for Broadcom 802.11 STA driver
 Group:      System Environment/Kernel
 License:    Redistributable, no modification permitted
 URL:        https://www.broadcom.com/support/?gid=1
-Source0:    https://www.broadcom.com/docs/linux_sta/hybrid-v35-nodebug-pcoem-6_30_223_248.tar.gz
-Source1:    https://www.broadcom.com/docs/linux_sta/hybrid-v35_64-nodebug-pcoem-6_30_223_248.tar.gz
-Source2:    https://www.broadcom.com/docs/linux_sta/README_6.30.223.248.txt
+Source0:    https://www.broadcom.com/docs/linux_sta/hybrid-v35-nodebug-pcoem-6_30_223_271.tar.gz
+Source1:    https://www.broadcom.com/docs/linux_sta/hybrid-v35_64-nodebug-pcoem-6_30_223_271.tar.gz
+Source2:    https://www.broadcom.com/docs/linux_sta/README_6.30.223.271.txt
 Source3:    broadcom-wl-blacklist.conf
 Source4:    20-wl.conf
 Source5:    api
 Source6:    fedora.readme
-Patch0:     broadcom-wl-001_license.patch
 
 BuildArch:  noarch
 Provides:   wl-kmod-common = %{version}
@@ -33,8 +32,7 @@ iconv -f iso8859-1 -t UTF8 lib/LICENSE.txt -o lib/LICENSE.txt
 sed -i 's/\r$//' lib/LICENSE.txt
 cp -p %{SOURCE2} .
 cp -p %{SOURCE6} .
-chmod 644 lib/LICENSE.txt README_6.30.223.248.txt fedora.readme
-%patch0 -p1 -b .license
+chmod 644 lib/LICENSE.txt README_6.30.223.271.txt fedora.readme
 
 %build
 echo "Nothing to build."
@@ -53,7 +51,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc README_6.30.223.248.txt fedora.readme
+%doc README_6.30.223.271.txt fedora.readme
 %if 0%{?rhel} || 0%{?fedora} < 21
 %doc lib/LICENSE.txt
 %else
@@ -64,9 +62,12 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/akmods/akmod-wl/api
 
 %changelog
+* Wed Oct 14 2015 Nicolas Viéville <nicolas.vieville@univ-valenciennes.fr> - 6.30.223.271-1
+- Upstream update to 6.30.223.271
+
 * Wed May 20 2015 Nicolas Viéville <nicolas.vieville@univ-valenciennes.fr> - 6.30.223.248-3
 - Update new Broadcom upstream URLs in SPEC file
-- Update to move license file to %license
+- Update to move license file to %%license
 - install section cleaned-up
 
 * Sat Dec 06 2014 Nicolas Chauvet <kwizart@gmail.com> - 6.30.223.248-2
