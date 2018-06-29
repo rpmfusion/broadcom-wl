@@ -11,7 +11,7 @@
 
 Name:       broadcom-wl
 Version:    6.30.223.271
-Release:    5%{?dist}
+Release:    6%{?dist}
 Summary:    Common files for Broadcom 802.11 STA driver
 Group:      System Environment/Kernel
 License:    Redistributable, no modification permitted
@@ -35,7 +35,7 @@ ExcludeArch:    ppc ppc64
 %if 0%{?fedora} >= 25
 # AppStream metadata generation
 BuildRequires:    python3
-BuildRequires:    libappstream-glib >= 0.6.3
+BuildRequires:    libappstream-glib
 %endif
 
 %description
@@ -65,13 +65,14 @@ install    -m 0755 -d         %{buildroot}%{_sysconfdir}/akmods/akmod-wl/
 install -p -m 0644 %{SOURCE5} %{buildroot}%{_sysconfdir}/akmods/akmod-wl/
 %if 0%{?fedora} >= 25
 # install AppData and add modalias provides
-install    -m 0755 -d         %{buildroot}%{_datadir}/appdata/
-install -p -m 0644 %{SOURCE7} %{buildroot}%{_datadir}/appdata/
-fn=%{buildroot}%{_datadir}/appdata/com.broadcom.wireless.hybrid.driver.metainfo.xml
+install    -m 0755 -d         %{buildroot}%{_datadir}/metainfo/
+install -p -m 0644 %{SOURCE7} %{buildroot}%{_datadir}/metainfo/
+fn=%{buildroot}%{_datadir}/metainfo/com.broadcom.wireless.hybrid.driver.metainfo.xml
 # As appstream-util deletes all comments in the metainfo.xml file, the
 # copyright must be saved and re-written to the resulting file.
 copyright_string=$(grep Copyright ${fn})
 python3 %{SOURCE8} README_6.30.223.271.txt "SUPPORTED DEVICES" | xargs appstream-util add-provide ${fn} modalias
+appstream-util validate-relax --nonet ${fn}
 grep -q Copyright ${fn} >/dev/null || sed -i "s%\(^<?xml.*$\)%\1\n${copyright_string}%" ${fn}
 %endif
 
@@ -86,13 +87,17 @@ grep -q Copyright ${fn} >/dev/null || sed -i "s%\(^<?xml.*$\)%\1\n${copyright_st
 %doc lib/LICENSE.txt
 %endif
 %if 0%{?fedora} >= 25
-%{_datadir}/appdata/com.broadcom.wireless.hybrid.driver.metainfo.xml
+%{_datadir}/metainfo/com.broadcom.wireless.hybrid.driver.metainfo.xml
 %endif
 %config(noreplace) %{_modprobe_d}/broadcom-wl-blacklist.conf
 %config(noreplace) %{_dracut_conf_d}/20-wl.conf
 %config(noreplace) %{_sysconfdir}/akmods/akmod-wl/api
 
 %changelog
+* Fri Jun 29 2018 Nicolas Viéville <nicolas.vieville@univ-valenciennes.fr> - 6.30.223.271-6
+- Move AppStream Metadata to /usr/share/metainfo directory
+- Added appstream-util validate-relax to conform with f28 packaging guidelines
+
 * Wed Apr 18 2018 Nicolas Viéville <nicolas.vieville@univ-valenciennes.fr> - 6.30.223.271-5
 - Added AppStream Metadata
 - Update new Broadcom upstream URLs in SPEC file
