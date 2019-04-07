@@ -9,9 +9,15 @@
  %global        _dracut_conf_d      %{_sysconfdir}/dracut.conf.d
 %endif
 
+%if 0%{?rhel} > 7 || 0%{?fedora}
+ %bcond_without python3
+%else
+ %bcond_with python3
+%endif
+
 Name:       broadcom-wl
 Version:    6.30.223.271
-Release:    9%{?dist}
+Release:    10%{?dist}
 Summary:    Common files for Broadcom 802.11 STA driver
 Group:      System Environment/Kernel
 License:    Redistributable, no modification permitted
@@ -32,9 +38,13 @@ Requires:   wl-kmod >= %{?epoch}:%{version}
 
 ExcludeArch:    ppc ppc64
 
-%if 0%{?fedora} >= 25
+%if 0%{?rhel} > 6 || 0%{?fedora} >= 25
 # AppStream metadata generation
+%if %{with python3}
 BuildRequires:    python3
+%else
+BuildRequires:    python
+%endif
 BuildRequires:    libappstream-glib
 %endif
 
@@ -63,7 +73,7 @@ install    -m 0755 -d         %{buildroot}%{_dracut_conf_d}
 install -p -m 0644 %{SOURCE4} %{buildroot}%{_dracut_conf_d}/
 install    -m 0755 -d         %{buildroot}%{_sysconfdir}/akmods/akmod-wl/
 install -p -m 0644 %{SOURCE5} %{buildroot}%{_sysconfdir}/akmods/akmod-wl/
-%if 0%{?fedora} >= 25
+%if 0%{?rhel} > 6 || 0%{?fedora} >= 25
 # install AppData and add modalias provides
 install    -m 0755 -d         %{buildroot}%{_datadir}/metainfo/
 install -p -m 0644 %{SOURCE7} %{buildroot}%{_datadir}/metainfo/
@@ -71,7 +81,11 @@ fn=%{buildroot}%{_datadir}/metainfo/com.broadcom.wireless.hybrid.driver.metainfo
 # As appstream-util deletes all comments in the metainfo.xml file, the
 # copyright must be saved and re-written to the resulting file.
 copyright_string=$(grep Copyright ${fn})
+%if %{with python3}
 python3 %{SOURCE8} README_6.30.223.271.txt "SUPPORTED DEVICES" | xargs appstream-util add-provide ${fn} modalias
+%else
+python %{SOURCE8} README_6.30.223.271.txt "SUPPORTED DEVICES" | xargs appstream-util add-provide ${fn} modalias
+%endif
 appstream-util validate-relax --nonet ${fn}
 grep -q Copyright ${fn} >/dev/null || sed -i "s%\(^<?xml.*$\)%\1\n${copyright_string}%" ${fn}
 %endif
@@ -86,7 +100,7 @@ grep -q Copyright ${fn} >/dev/null || sed -i "s%\(^<?xml.*$\)%\1\n${copyright_st
 %else
 %doc lib/LICENSE.txt
 %endif
-%if 0%{?fedora} >= 25
+%if 0%{?rhel} > 6 || 0%{?fedora} >= 25
 %{_datadir}/metainfo/com.broadcom.wireless.hybrid.driver.metainfo.xml
 %endif
 %config(noreplace) %{_modprobe_d}/broadcom-wl-blacklist.conf
@@ -94,6 +108,9 @@ grep -q Copyright ${fn} >/dev/null || sed -i "s%\(^<?xml.*$\)%\1\n${copyright_st
 %config(noreplace) %{_sysconfdir}/akmods/akmod-wl/api
 
 %changelog
+* Sat Apr 06 2019 Nicolas Viéville <nicolas.vieville@uphf.fr> - 6.30.223.271-10
+- improve SPEC file for RHEL 6.x and 7.x AppStream Metadata
+
 * Tue Mar 05 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 6.30.223.271-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
