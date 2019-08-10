@@ -17,7 +17,7 @@
 
 Name:       broadcom-wl
 Version:    6.30.223.271
-Release:    10%{?dist}
+Release:    11%{?dist}
 Summary:    Common files for Broadcom 802.11 STA driver
 Group:      System Environment/Kernel
 License:    Redistributable, no modification permitted
@@ -108,6 +108,9 @@ grep -q Copyright ${fn} >/dev/null || sed -i "s%\(^<?xml.*$\)%\1\n${copyright_st
 %config(noreplace) %{_sysconfdir}/akmods/akmod-wl/api
 
 %changelog
+* Sat Aug 10 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 6.30.223.271-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
 * Sat Apr 06 2019 Nicolas Viéville <nicolas.vieville@uphf.fr> - 6.30.223.271-10
 - improve SPEC file for RHEL 6.x and 7.x AppStream Metadata
 
