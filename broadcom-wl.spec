@@ -4,6 +4,7 @@
  # https://fedoraproject.org/wiki/Packaging:Guidelines?rd=Packaging/Guidelines#Configuration_files
  %global        _modprobe_d         %{_prefix}/lib/modprobe.d
  %global        _dracut_conf_d      %{_prefix}/lib/dracut/dracut.conf.d
+ %global        _nmlibdir_conf_d    %{_prefix}/lib/NetworkManager/conf.d
 %else #rhel <= 6
  %global        _modprobe_d         %{_sysconfdir}/modprobe.d
  %global        _dracut_conf_d      %{_sysconfdir}/dracut.conf.d
@@ -17,7 +18,7 @@
 
 Name:       broadcom-wl
 Version:    6.30.223.271
-Release:    11%{?dist}
+Release:    12%{?dist}
 Summary:    Common files for Broadcom 802.11 STA driver
 Group:      System Environment/Kernel
 License:    Redistributable, no modification permitted
@@ -31,6 +32,7 @@ Source5:    api
 Source6:    fedora.readme
 Source7:    com.broadcom.wireless.hybrid.driver.metainfo.xml
 Source8:    generate-modalias-metadata.py
+Source9:    90-broadcom-wl.conf
 
 BuildArch:  noarch
 Provides:   wl-kmod-common = %{?epoch}:%{version}
@@ -74,10 +76,12 @@ install -p -m 0644 %{SOURCE4} %{buildroot}%{_dracut_conf_d}/
 install    -m 0755 -d         %{buildroot}%{_sysconfdir}/akmods/akmod-wl/
 install -p -m 0644 %{SOURCE5} %{buildroot}%{_sysconfdir}/akmods/akmod-wl/
 %if 0%{?rhel} > 6 || 0%{?fedora} >= 25
+install    -m 0755 -d         %{buildroot}%{_nmlibdir_conf_d}/
+install -p -m 0644 %{SOURCE9} %{buildroot}%{_nmlibdir_conf_d}/
 # install AppData and add modalias provides
-install    -m 0755 -d         %{buildroot}%{_datadir}/metainfo/
-install -p -m 0644 %{SOURCE7} %{buildroot}%{_datadir}/metainfo/
-fn=%{buildroot}%{_datadir}/metainfo/com.broadcom.wireless.hybrid.driver.metainfo.xml
+install    -m 0755 -d         %{buildroot}%{_metainfodir}/
+install -p -m 0644 %{SOURCE7} %{buildroot}%{_metainfodir}/
+fn=%{buildroot}%{_metainfodir}/com.broadcom.wireless.hybrid.driver.metainfo.xml
 # As appstream-util deletes all comments in the metainfo.xml file, the
 # copyright must be saved and re-written to the resulting file.
 copyright_string=$(grep Copyright ${fn})
@@ -101,13 +105,21 @@ grep -q Copyright ${fn} >/dev/null || sed -i "s%\(^<?xml.*$\)%\1\n${copyright_st
 %doc lib/LICENSE.txt
 %endif
 %if 0%{?rhel} > 6 || 0%{?fedora} >= 25
-%{_datadir}/metainfo/com.broadcom.wireless.hybrid.driver.metainfo.xml
+%{_metainfodir}/com.broadcom.wireless.hybrid.driver.metainfo.xml
+%config %{_nmlibdir_conf_d}/90-broadcom-wl.conf
 %endif
 %config(noreplace) %{_modprobe_d}/broadcom-wl-blacklist.conf
 %config(noreplace) %{_dracut_conf_d}/20-wl.conf
 %config(noreplace) %{_sysconfdir}/akmods/akmod-wl/api
 
 %changelog
+* Tue Sep 24 2019 Nicolas Viéville <nicolas.vieville@uphf.fr> - 6.30.223.271-12
+- Workaround RHBZ#1703745 and RFBZ#5245 - Disable NetworkManager scan 
+  with randomized MAC address and added appropriated section in 
+  fedora.readme file
+- fedora.readme clean-up
+- Use %%{_metainfodir} macro in spec file
+
 * Sat Aug 10 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 6.30.223.271-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
