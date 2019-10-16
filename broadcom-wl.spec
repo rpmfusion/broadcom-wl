@@ -18,11 +18,11 @@
 
 Name:       broadcom-wl
 Version:    6.30.223.271
-Release:    12%{?dist}
+Release:    13%{?dist}
 Summary:    Common files for Broadcom 802.11 STA driver
 Group:      System Environment/Kernel
 License:    Redistributable, no modification permitted
-URL:        https://www.broadcom.com/support/download-search/?pf=Wireless+LAN+Infrastructure
+URL:        https://www.broadcom.com/support/download-search?pg=&pf=Wireless+LAN/Bluetooth+Combo
 Source0:    https://docs.broadcom.com/docs-and-downloads/docs/linux_sta/hybrid-v35-nodebug-pcoem-6_30_223_271.tar.gz
 Source1:    https://docs.broadcom.com/docs-and-downloads/docs/linux_sta/hybrid-v35_64-nodebug-pcoem-6_30_223_271.tar.gz
 Source2:    https://docs.broadcom.com/docs-and-downloads/docs/linux_sta/README_6.30.223.271.txt
@@ -113,6 +113,9 @@ grep -q Copyright ${fn} >/dev/null || sed -i "s%\(^<?xml.*$\)%\1\n${copyright_st
 %config(noreplace) %{_sysconfdir}/akmods/akmod-wl/api
 
 %changelog
+* Wed Oct 16 2019 Nicolas Viéville <nicolas.vieville@uphf.fr> - 6.30.223.271-13
+- Updated URLs to new Broadcom WEB site
+
 * Tue Sep 24 2019 Nicolas Viéville <nicolas.vieville@uphf.fr> - 6.30.223.271-12
 - Workaround RHBZ#1703745 and RFBZ#5245 - Disable NetworkManager scan 
   with randomized MAC address and added appropriated section in 
