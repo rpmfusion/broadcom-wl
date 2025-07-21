@@ -5,7 +5,7 @@
  %global        _modprobe_d         %{_prefix}/lib/modprobe.d
  %global        _dracut_conf_d      %{_prefix}/lib/dracut/dracut.conf.d
  %global        _nmlibdir_conf_d    %{_prefix}/lib/NetworkManager/conf.d
-%else #rhel <= 6
+%else
  %global        _modprobe_d         %{_sysconfdir}/modprobe.d
  %global        _dracut_conf_d      %{_sysconfdir}/dracut.conf.d
 %endif
@@ -18,7 +18,7 @@
 
 Name:       broadcom-wl
 Version:    6.30.223.271
-Release:    25%{?dist}
+Release:    26%{?dist}
 Summary:    Common files for Broadcom 802.11 STA driver
 Group:      System Environment/Kernel
 License:    Redistributable, no modification permitted
@@ -113,6 +113,9 @@ grep -q Copyright ${fn} >/dev/null || sed -i "s%\(^<?xml.*$\)%\1\n${copyright_st
 %config(noreplace) %{_sysconfdir}/akmods/akmod-wl/api
 
 %changelog
+* Mon Jul 21 2025 Nicolas Viéville <nicolas.vieville@uphf.fr> - 6.30.223.271-26
+- Fix %%else macro in broadcom-wl.spec line 8
+
 * Wed Jan 29 2025 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 6.30.223.271-25
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_42_Mass_Rebuild
 
